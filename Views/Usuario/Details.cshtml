@@ -4,84 +4,93 @@
     ViewData["Title"] = "Detalhes";
 }
 
-<div class="container mt-4 p-4 border border-secondary rounded" style="background-color: #ddd;">
-    <div class="row align-items-center justify-content-between">
-        <div class="col-auto">
-            <div class="col-auto align-content-center">
-                @if (Model.usuarioImagem != null)
+<div class="outer-border">
+    <div class="container mt-4 p-4">
+        <div class="row align-items-center justify-content-between">
+            <div class="col-auto">
+                <div class="col-auto align-content-center">
+                    @if (Model.usuarioImagem != null)
+                    {
+                        <img src="@Url.Content(Model.usuarioImagem)" class="rounded-circle" style="width: 80px; height: 80px; object-fit: fill;" />
+                    }
+                    else
+                    {
+                        <i class="bi bi-person-circle post-img rounded-circle fs-1" style="object-fit: cover; color:white"></i>
+                    }
+                </div>
+            </div>
+
+            <div class="col text-dark">
+                <h1>@Model.usuarioNome</h1>
+                <h4>Telefone: @Model.usuarioTelefone</h4>
+                <h4>E-mail: @Model.usuarioEmail</h4>
+            </div>
+
+            <div class="col-auto d-flex justify-content-center">
+                @if (ViewBag.Seguidor)
                 {
-                    <img src="@Url.Content(Model.usuarioImagem)" class="rounded-circle" style="width: 80px; height: 80px; object-fit: fill;" />
+                    <form asp-controller="Usuario" asp-action="DeixarDeSeguir" method="post">
+                        <button type="submit" name="id" value="@Model.usuarioId" class="btn btn-outline-danger d-flex align-items-center">
+                            <i class="bi bi-hand-thumbs-down-fill me-1">Deixar de Seguir</i>
+                        </button>
+                    </form>
                 }
                 else
                 {
-                    <i class="bi bi-person-circle post-img rounded-circle fs-1" style="object-fit: cover; color:white"></i>
+                    <form asp-controller="Usuario" asp-action="Seguir" method="post">
+                        <button type="submit" name="id" value="@Model.usuarioId" class="btn btn-outline-primary d-flex align-items-center">
+                            <i class="bi bi-hand-thumbs-up-fill me-1">Seguir</i>
+                        </button>
+                    </form>
                 }
             </div>
         </div>
 
-        <div class="col text-dark">
-            <h1>@Model.usuarioNome</h1>
-            <h4>Telefone: @Model.usuarioTelefone</h4>
-            <h4>E-mail: @Model.usuarioEmail</h4>
-        </div>
+        <hr />
 
-        <div class="col-auto d-flex justify-content-center">
-            @if (ViewBag.Seguidor)
+        <div class="row">
+            @foreach (var post in ViewData["Posts"] as List<projetoRedeSocial.Models.Post>)
             {
-                <form asp-controller="Usuario" asp-action="DeixarDeSeguir" method="post">
-                    <button type="submit" name="id" value="@Model.usuarioId" class="btn btn-primary d-flex align-items-center rounded-circle">
-                        <i class="bi bi-person-dash-fill display-6"></i>
-                    </button>
-                </form>
-            }
-            else
-            {
-                <form asp-controller="Usuario" asp-action="Seguir" method="post">
-                    <button type="submit" name="id" value="@Model.usuarioId" class="btn btn-primary d-flex align-items-center rounded-circle">
-                        <i class="bi bi-person-plus-fill display-6"></i>
-                    </button>
-                </form>
-            }
-        </div>
-    </div>
-
-    <hr />
-
-    <div class="row">
-        @foreach (var post in ViewData["Posts"] as List<projetoRedeSocial.Models.Post>)
-        {
-            if (post.usuarioId == Model.usuarioId && post.postStatus == "1")
-            {
-                <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
-                    <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.postId" class="text-decoration-none">
-                        <div class="post-card" style="background-color: @post.postCor">
-                            @if (!string.IsNullOrEmpty(post.postArquivo))
-                            {
-                                if (!post.postArquivo.Contains(".mp4"))
+                if (post.usuarioId == Model.usuarioId && post.postStatus == "1")
+                {
+                    <div class="col-sm-6 col-md-4 col-lg-3 mb-4">
+                        <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.postId" class="text-decoration-none">
+                            <div class="post-card" style="background-color: @post.postCor">
+                                @if (!string.IsNullOrEmpty(post.postArquivo))
                                 {
-                                    <img src="@Url.Content(post.postArquivo)" class="img-fluid rounded-img" alt="Post Image" />
+                                    if (!post.postArquivo.Contains(".mp4"))
+                                    {
+                                        <img src="@Url.Content(post.postArquivo)" class="img-fluid rounded-img" alt="Post Image" />
+                                    }
+                                    else
+                                    {
+                                        <video src="@Url.Content(post.postArquivo)" class="img-fluid rounded-video" controls>
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    }
                                 }
                                 else
                                 {
-                                    <video src="@Url.Content(post.postArquivo)" class="img-fluid rounded-video" controls>
-                                        Your browser does not support the video tag.
-                                    </video>
+                                    <div class="post-title">@post.postTitulo</div>
+                                    <div class="post-desc">@post.postDesc</div>
                                 }
-                            }
-                            else
-                            {
-                                <div class="post-title">@post.postTitulo</div>
-                                <div class="post-desc">@post.postDesc</div>
-                            }
-                        </div>
-                    </a>
-                </div>
+                            </div>
+                        </a>
+                    </div>
+                }
             }
-        }
+        </div>
     </div>
 </div>
 
 <style>
+    .outer-border {
+        border: 1px solid #ddd;
+        border-radius: 15px;
+        padding: 20px;
+        margin: 20px;
+    }
+
     .post-img {
         border-radius: 50%;
         object-fit: cover;
@@ -102,9 +111,9 @@
         transition: transform 0.2s;
     }
 
-    .post-card:hover {
-        transform: scale(1.05);
-    }
+        .post-card:hover {
+            transform: scale(1.05);
+        }
 
     .post-title {
         font-size: 1.2em;
@@ -123,6 +132,7 @@
         object-fit: cover;
     }
 </style>
+
 
 
 @* @model projetoRedeSocial.Models.Usuario

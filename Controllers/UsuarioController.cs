@@ -90,9 +90,9 @@ namespace projetoRedeSocial.Controllers
         // GET: Usuario
         public async Task<IActionResult> Index()
         {
-              return _context.usuario != null ? 
-                          View(await _context.usuario.ToListAsync()) :
-                          Problem("Entity set 'Contexto.usuario'  is null.");
+            return _context.usuario != null ?
+                        View(await _context.usuario.ToListAsync()) :
+                        Problem("Entity set 'Contexto.usuario'  is null.");
         }
 
         [HttpPost]
@@ -311,14 +311,14 @@ namespace projetoRedeSocial.Controllers
                 _context.usuario.Remove(usuario);
                 _context.SaveChanges();
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
         private bool UsuarioExists(int id)
         {
-          return (_context.usuario?.Any(e => e.usuarioId == id)).GetValueOrDefault();
+            return (_context.usuario?.Any(e => e.usuarioId == id)).GetValueOrDefault();
         }
     }
 }
