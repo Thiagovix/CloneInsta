@@ -1,0 +1,278 @@
+﻿@model projetoRedeSocial.Models.Post
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container my-4 text-dark">
+    <div class="border rounded p-4">
+        <!-- Perfil do Usuário -->
+        <div class="row align-items-center mb-4">
+            <div class="col-auto">
+                <a asp-controller="Usuario" asp-action="Details" asp-route-id="@Model.usuarioPost?.usuarioId" class="text-decoration-none text-dark">
+                    @if (Model.usuarioPost?.usuarioImagem != null)
+                    {
+                        <img src="@Url.Content(Model.usuarioPost.usuarioImagem)" class="rounded-circle border" style="width: 80px; height: 80px; object-fit: cover;" />
+                    }
+                    else
+                    {
+                        <i class="fs-1 bi bi-person-circle" style="color: #6c757d;"></i>
+                    }
+                    <span class="fs-4 ms-3 d-none d-sm-inline h1">@Model.usuarioPost?.usuarioNome</span>
+                </a>
+            </div>
+            <div class="col d-flex align-items-center justify-content-end">
+                @if (ViewBag.userId == Model.usuarioPost?.usuarioId)
+                {
+                    <div class="dropdown me-2">
+                        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                            <i class="bi bi-gear"></i>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                            <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@Model.postId">Editar</a></li>
+                            <li>
+                                <form asp-action="Delete" method="post" style="display:inline;">
+                                    <input type="hidden" name="id" value="@Model.postId" />
+                                    <button type="submit" class="dropdown-item">Excluir</button>
+                                </form>
+                            </li>
+                        </ul>
+                    </div>
+                }
+                <!-- Botão de Curtida -->
+                @if (ViewBag.Curtida)
+                {
+                    <form asp-controller="Posts" asp-action="Descurtir" method="post" class="me-2">
+                        <input type="hidden" name="id" value="@Model.postId" />
+                        <button type="submit" class="btn btn-outline-danger d-flex align-items-center">
+                            <i class="bi bi-hand-thumbs-down-fill me-1"></i> Descurtir
+                        </button>
+                    </form>
+                }
+                else
+                {
+                    <form asp-controller="Posts" asp-action="Curtir" method="post" class="me-2">
+                        <input type="hidden" name="id" value="@Model.postId" />
+                        <button type="submit" class="btn btn-outline-primary d-flex align-items-center">
+                            <i class="bi bi-hand-thumbs-up-fill me-1"></i> Curtir
+                        </button>
+                    </form>
+                }
+            </div>
+        </div>
+
+        <hr />
+
+        <!-- Conteúdo do Post -->
+        @if (!string.IsNullOrEmpty(Model.postArquivo))
+        {
+            <div class="row d-flex justify-content-center align-items-center">
+                <div class="col-md-6 mb-4">
+                    @if (!Model.postArquivo.Contains(".mp4"))
+                    {
+                        <img src="@Url.Content(Model.postArquivo)" class="img-fluid rounded border" />
+                    }
+                    else
+                    {
+                        <video src="@Url.Content(Model.postArquivo)" class="img-fluid rounded border" controls>
+                            Your browser does not support the video tag.
+                        </video>
+                    }
+                </div>
+                <div class="col-md-6 mb-4">
+                    <h3>@Html.DisplayFor(model => model.postTitulo)</h3>
+                    <div class="overflow-auto" style="max-height: 400px;">
+                        <p>@Html.DisplayFor(model => model.postDesc)</p>
+                    </div>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row d-flex justify-content-center align-items-center text-dark">
+                <div class="col-md-10 mb-4 text-center">
+                    <h3>@Html.DisplayFor(model => model.postTitulo)</h3>
+                    <p>@Html.DisplayFor(model => model.postDesc)</p>
+                </div>
+            </div>
+        }
+
+        <!-- Adicionar Comentário -->
+        <div class="mt-4">
+            <form asp-action="AdicionarComentario" method="post">
+                <input type="hidden" name="postId" value="@Model.postId" />
+                <div class="mb-3">
+                    <label for="comentario" class="form-label">Adicionar Comentário:</label>
+                    <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Enviar Comentário</button>
+            </form>
+        </div>
+
+        <!-- Comentários -->
+        @if (ViewData["Comentarios"] != null && ((List<Comentarios>)ViewData["Comentarios"]).Any())
+        {
+            <hr />
+            <h4 class="text-dark">Comentários:</h4>
+            @foreach (var comentario in (List<Comentarios>)ViewData["Comentarios"])
+            {
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">@comentario.usuarioComentario.usuarioNome</h5>
+                        <p class="card-text">@comentario.comentario</p>
+                    </div>
+                </div>
+            }
+        }
+    </div>
+</div>
+
+<style>
+    .post-card {
+        border-radius: 0;
+        overflow: hidden;
+        position: relative;
+    }
+
+        .post-card img,
+        .post-card video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .post-card .card-body {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            color: #fff;
+            padding: 10px;
+        }
+</style>
+
+
+@* @model projetoRedeSocial.Models.Post
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="row align-items-center">
+    <div class="col row align-items-center">
+        <a asp-controller="Usuario" asp-action="Details" asp-route-id="@Model.usuarioPost?.usuarioId">
+            @if (Model.usuarioPost?.usuarioImagem != null)
+            {
+                <img src="@Url.Content(Model.usuarioPost.usuarioImagem)" class="rounded-circle" style="width: 80px; height: 80px; object-fit: cover;" />
+            }
+            else
+            {
+                <i class="fs-1 bi bi-person-circle img-fluid rounded-img" style="color:white"></i>
+            }
+            <span class="fs-4 ms-3 d-none d-sm-inline h1">@Model.usuarioPost?.usuarioNome</span>
+        </a>
+    </div>
+
+    <div class="col d-flex align-items-center justify-content-end">
+        @if (ViewBag.userId == Model.usuarioPost?.usuarioId)
+        {
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="bi bi-gear"></i>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" asp-action="Edit" asp-route-id="@Model.postId">Editar</a></li>
+                    <li>
+                        <form asp-action="Delete" method="post" style="display:inline;">
+                            <input type="hidden" name="id" value="@Model.postId" />
+                            <button type="submit" class="dropdown-item">Excluir</button>
+                        </form>
+                    </li>
+                </ul>
+            </div>
+        }
+
+        @if (ViewBag.Curtida)
+        {
+            <form asp-controller="Posts" asp-action="Descurtir" method="post" style="display:inline;">
+                <input type="hidden" name="id" value="@Model.postId" />
+                <button type="submit" class="btn btn-danger"><i class="bi bi-hand-thumbs-down-fill"></i></button>
+            </form>
+        }
+        else
+        {
+            <form asp-controller="Posts" asp-action="Curtir" method="post" style="display:inline;">
+                <input type="hidden" name="id" value="@Model.postId" />
+                <button type="submit" class="btn btn-primary"><i class="bi bi-hand-thumbs-up-fill"></i></button>
+            </form>
+        }
+    </div>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.postArquivo))
+{
+    <div class=" row d-flex justify-content-lg-around align-items-center ">
+        <hr />
+        <div class="col-5 d-flex justify-content-center flex-column text-center text-dark">
+            <p class="h3">@Html.DisplayFor(model => model.postTitulo)</p>
+            <div class="h4" style="overflow-y: scroll; height: 400px;">
+                @Html.DisplayFor(model => model.postDesc)
+            </div>
+        </div>
+        <div class="col-5 ">
+
+            @if (!Model.postArquivo.Contains(".mp4"))
+            {
+                <img src="@Url.Content(Model.postArquivo)" class="post-img" style="width:400px" />
+            }
+            else
+            {
+                <video src="@Url.Content(Model.postArquivo)" class="post-img">
+                    Your browser does not support the video tag.
+                </video>
+            }
+
+        </div>
+    </div>
+    <hr />
+}
+else
+{
+    <div class=" row d-flex justify-content-lg-around align-items-center text-white">
+        <hr />
+        <div class="col-10 d-flex justify-content-center flex-column text-center ">
+            <p class="h3">@Html.DisplayFor(model => model.postTitulo)</p>
+            <div class="h4">
+                @Html.DisplayFor(model => model.postDesc)
+            </div>
+        </div>
+    </div>
+    <hr />
+}
+
+<form asp-action="AdicionarComentario" method="post">
+    <input type="hidden" name="postId" value="@Model.postId" />
+
+    <div class="form-group" style="color: black;">
+        <label for="comentario">Adicionar Comentário:</label>
+        <textarea class="form-control" id="comentario" name="comentario" rows="3"></textarea>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Enviar Comentário</button>
+</form>
+
+@if (ViewData["Comentarios"] != null && ((List<Comentarios>)ViewData["Comentarios"]).Any())
+{
+    <hr />
+    <h4 class="text-dark">Comentários:</h4>
+    @foreach (var comentario in (List<Comentarios>)ViewData["Comentarios"])
+    {
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">@comentario.usuarioComentario.usuarioNome</h5>
+                <p class="card-text">@comentario.comentario</p>
+            </div>
+        </div>
+    }
+} *@

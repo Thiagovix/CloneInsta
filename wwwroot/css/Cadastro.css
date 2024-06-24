@@ -1,0 +1,68 @@
+﻿body {
+    background-color: #fafafa;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-container {
+    background-color: #fff;
+    border: 1px solid #dbdbdb;
+    padding: 40px;
+    max-width: 350px;
+    width: 100%;
+    text-align: center;
+    border-radius: 4px; /* Adicionei borda arredondada para um visual mais suave */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Adicionei uma sombra para destaque */
+}
+
+.form h3 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 20px;
+}
+
+.form-label {
+    display: none;
+}
+
+.form-control {
+    margin-bottom: 10px;
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #dbdbdb;
+    border-radius: 3px;
+}
+
+.btn-primary {
+    background-color: #0095f6;
+    border: none;
+    color: white;
+    padding: 10px;
+    font-weight: 600;
+    font-size: 14px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+    .btn-primary:hover {
+        background-color: #007bbf;
+    }
+
+.text-info {
+    color: #0095f6;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+    .text-info:hover {
+        text-decoration: underline;
+    }
+
+.text-center {
+    text-align: center !important;
+}
