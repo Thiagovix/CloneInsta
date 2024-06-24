@@ -1,5 +1,5 @@
 ﻿--create database redeSocialDB;
 
---use redeSocialDB;
+use redeSocialDB;
 
 --select * from comentarios;
