@@ -47,12 +47,12 @@
         <ul class="nav nav-pills mb-3 justify-content-center" id="pills-tab" role="tablist">
             <li class="nav-item" role="presentation">
                 <button class="nav-link active" id="pills-home-tab" data-bs-toggle="pill" data-bs-target="#pills-home" type="button" role="tab" aria-controls="pills-home" aria-selected="true">
-                    Posts
+                    Postagens
                 </button>
             </li>
             <li class="nav-item" role="presentation">
                 <button class="nav-link" id="pills-profile-tab" data-bs-toggle="pill" data-bs-target="#pills-profile" type="button" role="tab" aria-controls="pills-profile" aria-selected="false">
-                    Perfis
+                    Seguidores
                 </button>
             </li>
         </ul>
@@ -99,8 +99,8 @@
             <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
                 @foreach (var usuario in ViewBag.Users)
                 {
-                    <div class="row align-items-center mb-3">
-                        <div class="col-auto profile-card">
+                    <div class="column align-items-center mb-3">
+                        <div class="col-5 profile-card">
                             <a asp-controller="Usuario" asp-action="Details" asp-route-id="@usuario.usuarioId" class="text-decoration-none text-dark d-flex align-items-center">
                                 @if (!string.IsNullOrEmpty(usuario.usuarioImagem))
                                 {
