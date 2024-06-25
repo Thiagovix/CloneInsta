@@ -62,7 +62,7 @@
         <div class="tab-pane fade" id="pills-profile" role="tabpanel" aria-labelledby="pills-profile-tab">
             @foreach (var usuario in ViewBag.Usuario)
             {
-                <div class="row align-items-center">
+                <div class="col align-items-center border rounded p-2">
                     <div class="col row align-items-center">
                         <a asp-controller="Usuario" asp-action="Details" asp-route-id="@usuario.usuarioId">
                             @if (usuario.usuarioImagem != null)
